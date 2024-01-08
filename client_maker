@@ -5,7 +5,7 @@
 # The script WILL NOT DELETE ANYTHING - it just renames any certs dir that it finds
 
 # You will probably need to change this for your system
-mosquitto_dir="/etc/mosquitto"
+mosquitto_dir="./output"
 
 # Note: Pico W can use EC or RSA keys only, not EC25519, and Tasmota can only use 2048 bit RSA keys.
 
@@ -13,20 +13,20 @@ mosquitto_dir="/etc/mosquitto"
 key_type='EC'
 
 # Choice of NIST Curves for EC Keys: P-256, P-384 or P-521
-curve='P-256'
+curve='P-384'
 
 # Choice of Bits for RSA Keys: 2048 or 4096
 rsa_bits='2048'
 
 # How many days is the Cert valid for?
-days='365'
+days='36500'
 
 ############################################################
 #   End of user defined variables
 ############################################################
 
 # Sanity check: have you called the script correctly?
-[ -z "$1" ] | [ -z "$2" ] && printf "\n Missing aurguments...\n\n  Enter either DEM or PEM then the username \n  eg: client_maker pem user1 \n  or  client_maker der user2\n\n  You can also override the default Key Type by adding RSA, EC, or ED25519 as an optional third argument\n\n  eg: client_maker pem user1 EC\n\n" && exit 1
+[ -z "$1" ] | [ -z "$2" ] && printf "\n Missing aurguments...\n\n  Enter either DER or PEM then the username \n  eg: client_maker pem user1 \n  or  client_maker der user2\n\n  You can also override the default Key Type by adding RSA, EC, or ED25519 as an optional third argument\n\n  eg: client_maker pem user1 EC\n\n" && exit 1
 
 # If Argument $3 has been given, override the default key_type given above
 if [ -n "$3" ]
@@ -46,7 +46,7 @@ fi
 algorithm="-algorithm ${key_type}"
 
 # Set the specific pkeyopt for the chosen algorithm (BLANK for ED25519)
-if [ "${key_type}" == "EC" ]; then 
+if [ "${key_type}" == "EC" ]; then
   echo 'Create EC Key'
   pkeyopt="-pkeyopt ec_paramgen_curve:${curve}"
 elif [ "${key_type}" == "RSA" ]; then
@@ -55,7 +55,7 @@ elif [ "${key_type}" == "RSA" ]; then
 elif [ "${key_type}" == "ED25519" ]; then
   echo 'Create ED25519 Key'
   pkeyopt=""
-else 
+else
   echo 'Key Type not found'
 fi
 
